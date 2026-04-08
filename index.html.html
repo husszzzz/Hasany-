@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تطبيق الحسني - احترافي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <audio autoplay loop id="bg-music">
+    <source src="media/music.mp3" type="audio/mpeg" />
+  </audio>
+
+  <div class="user-info" id="user-info">
+    <span id="username">غير مسجل</span>
+    <button id="logout-btn" onclick="logout()" style="display:none;">تسجيل الخروج</button>
+  </div>
+
+  <div class="container">
+    <h1>🎓 تطبيق الحسني</h1>
+    <p class="subtitle">كل ما تحتاجه للدراسة في تطبيق واحد</p>
+
+    <div class="buttons">
+      <button onclick="login()">🔐 تسجيل الدخول</button>
+      <button onclick="showResults()" class="protected">📊 نتائج الثالث المتوسط</button>
+      <button onclick="openTelegram()" class="protected">📘 الملازم الدراسية</button>
+      <button onclick="openTelegram()" class="protected">📌 المرشحات</button>
+    </div>
+
+    <div id="output" class="output-box"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
