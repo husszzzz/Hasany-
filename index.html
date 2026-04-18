@@ -1,36 +1,250 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>تطبيق الحسني - احترافي</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Premium Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --accent-color: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* تأثير الشعاع المتحرك في الخلفية */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.05),
+                transparent
+            );
+            transition: 0.5s;
+            animation: scan 4s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* توزيع الأضواء البيضاء */
+        .light-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .top-left { top: -100px; left: -100px; }
+        .bottom-right { bottom: -100px; right: -100px; }
+
+        /* حاوية البطاقة الرئيسية */
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 450px;
+            padding: 40px 20px;
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* صورة الملف الشخصي بتأثير النبض */
+        .profile-img-container {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-img-container::after {
+            content: "";
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+            animation: pulse 2s infinite;
+        }
+
+        #profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #000;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        /* اسم الموقع مع تأثير لمعان */
+        #site-name {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, #888, #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* أزرار الروابط */
+        .links-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-card:hover {
+            background: var(--accent-color);
+            color: black;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+        }
+
+        .link-card i {
+            font-size: 1.5rem;
+            margin-left: 15px;
+        }
+
+        .link-card span {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* تأثير تحميل البيانات */
+        .loading {
+            font-style: italic;
+            opacity: 0.6;
+        }
+
+    </style>
 </head>
 <body>
-  <audio autoplay loop id="bg-music">
-    <source src="media/music.mp3" type="audio/mpeg" />
-  </audio>
 
-  <div class="user-info" id="user-info">
-    <span id="username">غير مسجل</span>
-    <button id="logout-btn" onclick="logout()" style="display:none;">تسجيل الخروج</button>
-  </div>
+    <div class="light-glow top-left"></div>
+    <div class="light-glow bottom-right"></div>
 
-  <div class="container">
-    <h1>🎓 تطبيق الحسني</h1>
-    <p class="subtitle">كل ما تحتاجه للدراسة في تطبيق واحد</p>
+    <div class="container">
+        <div class="profile-img-container">
+            <img id="profile-img" src="https://via.placeholder.com/150" alt="Profile">
+        </div>
 
-    <div class="buttons">
-      <button onclick="login()">🔐 تسجيل الدخول</button>
-      <button onclick="showResults()" class="protected">📊 نتائج الثالث المتوسط</button>
-      <button onclick="openTelegram()" class="protected">📘 الملازم الدراسية</button>
-      <button onclick="openTelegram()" class="protected">📌 المرشحات</button>
+        <h1 id="site-name">جاري التحميل...</h1>
+
+        <div class="links-grid">
+            <a id="insta-link" href="#" class="link-card" target="_blank">
+                <i class="fab fa-instagram"></i>
+                <span>انستغرام</span>
+            </a>
+            <a id="tiktok-link" href="#" class="link-card" target="_blank">
+                <i class="fab fa-tiktok"></i>
+                <span>تيك توك</span>
+            </a>
+            <a id="fb-link" href="#" class="link-card" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+                <span>فيسبوك</span>
+            </a>
+            <a id="phone-link" href="#" class="link-card">
+                <i class="fas fa-phone"></i>
+                <span>اتصال</span>
+            </a>
+        </div>
     </div>
 
-    <div id="output" class="output-box"></div>
-  </div>
+    <script>
+        // رابط الجدول بتنسيق CSV للتصدير المباشر
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/126ilAR3dYvW4NLzrorvfKTopvanRXfWufBTiqdnFn4s/gviz/tq?tqx=out:csv';
 
-  <script src="script.js"></script>
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(sheetUrl);
+                const data = await response.text();
+                
+                // تحويل الـ CSV إلى مصفوفة (معالجة بسيطة للصف الثاني)
+                const rows = data.split('\n').map(row => row.split(',').map(cell => cell.replace(/"/g, '')));
+                
+                // الصف الثاني هو البيانات (Index 1)
+                const userData = rows[1];
+
+                if (userData) {
+                    document.getElementById('site-name').innerText = userData[0]; // الخلية A2
+                    document.getElementById('profile-img').src = userData[1];      // الخلية B2
+                    document.getElementById('insta-link').href = userData[2];     // الخلية C2
+                    document.getElementById('tiktok-link').href = userData[3];    // الخلية D2
+                    document.getElementById('phone-link').href = 'tel:' + userData[4]; // الخلية E2
+                }
+            } catch (error) {
+                console.error("خطأ في جلب البيانات:", error);
+                document.getElementById('site-name').innerText = "خطأ في الربط";
+            }
+        }
+
+        // تشغيل الجلب عند تحميل الصفحة
+        fetchSheetData();
+    </script>
 </body>
 </html>
