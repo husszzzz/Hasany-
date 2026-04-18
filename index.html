@@ -3,248 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Premium Profile</title>
+    <title>Premium Smart Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #050505;
-            --accent-color: #ffffff;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-dark: #000000;
+            --accent-white: #ffffff;
+            --glow-color: rgba(255, 255, 255, 0.4);
+            --card-bg: rgba(255, 255, 255, 0.05);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: white;
-            overflow-x: hidden;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-x: hidden;
+            perspective: 1000px;
         }
 
-        /* تأثير الشعاع المتحرك في الخلفية */
-        body::before {
-            content: "";
+        /* الشعاع المتحرك في الخلفية */
+        .scanning-beam {
             position: fixed;
             top: 0;
             left: -100%;
-            width: 100%;
+            width: 50%;
             height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.05),
-                transparent
-            );
-            transition: 0.5s;
-            animation: scan 4s linear infinite;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transform: skewX(-25deg);
+            animation: moveBeam 6s infinite linear;
             z-index: 1;
         }
 
-        @keyframes scan {
+        @keyframes moveBeam {
             0% { left: -100%; }
-            100% { left: 100%; }
+            100% { left: 150%; }
         }
 
-        /* توزيع الأضواء البيضاء */
-        .light-glow {
+        /* الأضواء والوهج */
+        .bg-glow {
             position: fixed;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
             border-radius: 50%;
             z-index: 0;
             pointer-events: none;
         }
 
-        .top-left { top: -100px; left: -100px; }
-        .bottom-right { bottom: -100px; right: -100px; }
+        .glow-1 { top: -200px; left: -200px; }
+        .glow-2 { bottom: -200px; right: -200px; }
 
         /* حاوية البطاقة الرئيسية */
-        .container {
+        .main-card {
             position: relative;
-            z-index: 2;
+            z-index: 10;
             width: 90%;
-            max-width: 450px;
-            padding: 40px 20px;
+            max-width: 400px;
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 50px 25px;
             text-align: center;
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            animation: fadeIn 1.5s ease-out;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            animation: cardEntrance 1.2s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(50px) rotateX(10deg); }
+            to { opacity: 1; transform: translateY(0) rotateX(0); }
         }
 
-        /* صورة الملف الشخصي بتأثير النبض */
-        .profile-img-container {
+        /* مكان الصورة مع تأثير الشعاع */
+        .profile-wrapper {
             position: relative;
-            width: 130px;
-            height: 130px;
-            margin: 0 auto 20px;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 30px;
         }
 
-        .profile-img-container::after {
-            content: "";
-            position: absolute;
-            inset: -5px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-color);
-            animation: pulse 2s infinite;
-        }
-
-        #profile-img {
+        .profile-image {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #000;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 5px;
+            background: #000;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 0; }
-            100% { transform: scale(1); opacity: 0; }
+        .profile-wrapper::before {
+            content: "";
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-white);
+            animation: orbit 4s linear infinite;
+            clip-path: polygon(0 0, 50% 0, 50% 50%, 0 50%);
         }
 
-        /* اسم الموقع مع تأثير لمعان */
+        @keyframes orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* اسم الموقع مع تأثير الكتابة الرهيب */
         #site-name {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, #fff, #888, #fff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 40px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            min-height: 45px;
         }
 
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-
-        /* أزرار الروابط */
-        .links-grid {
-            display: grid;
+        /* تصميم الأزرار */
+        .links-container {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
-            margin-top: 20px;
         }
 
-        .link-card {
+        .social-btn {
             display: flex;
             align-items: center;
-            padding: 15px 25px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            color: white;
+            justify-content: space-between;
+            padding: 18px 25px;
+            border-radius: 20px;
             text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
 
-        .link-card:hover {
-            background: var(--accent-color);
+        .social-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .social-btn:hover::before {
+            left: 100%;
+        }
+
+        .social-btn:hover {
+            background: white;
             color: black;
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255,255,255,0.1);
         }
 
-        .link-card i {
-            font-size: 1.5rem;
-            margin-left: 15px;
+        .social-btn i {
+            font-size: 1.4rem;
         }
 
-        .link-card span {
+        .social-btn span {
+            font-weight: 700;
             font-size: 1.1rem;
-            font-weight: 600;
+            flex-grow: 1;
+            margin-right: 15px;
+            text-align: right;
         }
 
-        /* تأثير تحميل البيانات */
-        .loading {
-            font-style: italic;
-            opacity: 0.6;
+        /* تأثير الحركة عند التحميل */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
         }
 
     </style>
 </head>
 <body>
 
-    <div class="light-glow top-left"></div>
-    <div class="light-glow bottom-right"></div>
+    <div class="scanning-beam"></div>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
 
-    <div class="container">
-        <div class="profile-img-container">
-            <img id="profile-img" src="https://via.placeholder.com/150" alt="Profile">
+    <div class="main-card">
+        <div class="profile-wrapper">
+            <img id="profile-img" class="profile-image" src="https://via.placeholder.com/150" alt="Profile">
         </div>
 
-        <h1 id="site-name">جاري التحميل...</h1>
+        <h1 id="site-name">...</h1>
 
-        <div class="links-grid">
-            <a id="insta-link" href="#" class="link-card" target="_blank">
+        <div class="links-container">
+            <a id="insta-url" href="#" class="social-btn fade-in-up" style="animation-delay: 0.2s;">
                 <i class="fab fa-instagram"></i>
                 <span>انستغرام</span>
             </a>
-            <a id="tiktok-link" href="#" class="link-card" target="_blank">
+            <a id="tiktok-url" href="#" class="social-btn fade-in-up" style="animation-delay: 0.4s;">
                 <i class="fab fa-tiktok"></i>
                 <span>تيك توك</span>
             </a>
-            <a id="fb-link" href="#" class="link-card" target="_blank">
-                <i class="fab fa-facebook-f"></i>
+            <a id="fb-url" href="#" class="social-btn fade-in-up" style="animation-delay: 0.6s;">
+                <i class="fab fa-facebook"></i>
                 <span>فيسبوك</span>
             </a>
-            <a id="phone-link" href="#" class="link-card">
+            <a id="phone-url" href="#" class="social-btn fade-in-up" style="animation-delay: 0.8s;">
                 <i class="fas fa-phone"></i>
-                <span>اتصال</span>
+                <span>اتصال مباشر</span>
             </a>
         </div>
     </div>
 
     <script>
-        // رابط الجدول بتنسيق CSV للتصدير المباشر
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/126ilAR3dYvW4NLzrorvfKTopvanRXfWufBTiqdnFn4s/gviz/tq?tqx=out:csv';
+        // الرابط المباشر لتصدير البيانات كـ CSV
+        const sheetID = '126ilAR3dYvW4NLzrorvfKTopvanRXfWufBTiqdnFn4s';
+        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
 
-        async function fetchSheetData() {
+        async function loadData() {
             try {
-                const response = await fetch(sheetUrl);
+                const response = await fetch(csvUrl);
                 const data = await response.text();
                 
-                // تحويل الـ CSV إلى مصفوفة (معالجة بسيطة للصف الثاني)
-                const rows = data.split('\n').map(row => row.split(',').map(cell => cell.replace(/"/g, '')));
-                
-                // الصف الثاني هو البيانات (Index 1)
-                const userData = rows[1];
+                // تقسيم الـ CSV بشكل احترافي يتعامل مع الفواصل داخل الروابط
+                const rows = data.split('\n').map(row => {
+                    const matches = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                    return matches ? matches.map(m => m.replace(/^"|"$/g, '')) : [];
+                });
 
-                if (userData) {
-                    document.getElementById('site-name').innerText = userData[0]; // الخلية A2
-                    document.getElementById('profile-img').src = userData[1];      // الخلية B2
-                    document.getElementById('insta-link').href = userData[2];     // الخلية C2
-                    document.getElementById('tiktok-link').href = userData[3];    // الخلية D2
-                    document.getElementById('phone-link').href = 'tel:' + userData[4]; // الخلية E2
+                // الصف الثاني (Index 1) هو مكان البيانات A2, B2...
+                const config = rows[1];
+
+                if (config && config.length >= 5) {
+                    // الخلية A2: الاسم
+                    document.getElementById('site-name').innerText = config[0];
+                    // الخلية B2: رابط الصورة
+                    document.getElementById('profile-img').src = config[1];
+                    // الخلية C2: انستغرام
+                    document.getElementById('insta-url').href = config[2];
+                    // الخلية D2: تيك توك
+                    document.getElementById('tiktok-url').href = config[3];
+                    // الخلية E2: الهاتف
+                    document.getElementById('phone-url').href = `tel:${config[4]}`;
+                    
+                    // الخلية F2 (اختياري للفيسبوك لو وضعت فيه رابط)
+                    if(config[5]) {
+                        document.getElementById('fb-url').href = config[5];
+                    }
                 }
             } catch (error) {
-                console.error("خطأ في جلب البيانات:", error);
-                document.getElementById('site-name').innerText = "خطأ في الربط";
+                console.error("خطأ في الربط:", error);
+                document.getElementById('site-name').innerText = "تأكد من مشاركة الجدول";
             }
         }
 
-        // تشغيل الجلب عند تحميل الصفحة
-        fetchSheetData();
+        // تشغيل الوظيفة عند التحميل
+        loadData();
     </script>
 </body>
 </html>
