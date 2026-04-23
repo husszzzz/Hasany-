@@ -1,238 +1,27 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Fire Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    
-    <style>
-        :root {
-            --bg-color: #050505;
-            --accent-white: #ffffff;
-            --fire-color: rgba(255, 69, 0, 0.6);
-            --glass: rgba(255, 255, 255, 0.03);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* الشعاع المتحرك على طول الصفحة */
-        .scan-line {
-            position: fixed;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            animation: scan 4s linear infinite;
-            z-index: 1;
-        }
-
-        @keyframes scan {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        /* الأضواء البيضاء الخلفية */
-        .glow {
-            position: fixed;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 0;
-        }
-        .top-left { top: -150px; left: -150px; }
-        .bottom-right { bottom: -150px; right: -150px; }
-
-        /* الحاوية الزجاجية */
-        .container {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 420px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 40px 25px;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            animation: slideIn 1s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* تأثير الصورة مع النار */
-        .profile-container {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 20px;
-        }
-
-        #profile-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* تأثير النار الخفيف */
-        .fire-effect {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, var(--fire-color) 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(15px);
-            animation: flicker 1.5s infinite alternate;
-            z-index: 1;
-        }
-
-        @keyframes flicker {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            100% { transform: translate(-50%, -52%) scale(1.1); opacity: 0.8; }
-        }
-
-        /* الاسم المتوهج */
-        #site-name {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 30px;
-            background: linear-gradient(90deg, #fff, #888, #fff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-        }
-
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-
-        /* الأزرار الرهيبة */
-        .links-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .link-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 25px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            color: white;
-            text-decoration: none;
-            transition: 0.4s all;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .link-btn:hover {
-            background: white;
-            color: black;
-            transform: scale(1.05);
-        }
-
-        .link-btn i { font-size: 1.4rem; }
-        .link-btn span { font-weight: 700; flex-grow: 1; text-align: right; margin-right: 15px; }
-
-    </style>
-</head>
-<body>
-
-    <div class="scan-line"></div>
-    <div class="glow top-left"></div>
-    <div class="glow bottom-right"></div>
-
-    <div class="container" id="main-content" style="display:none;">
-        <div class="profile-container">
-            <div class="fire-effect"></div>
-            <img id="profile-img" src="" alt="Profile">
-        </div>
-
-        <h1 id="site-name"></h1>
-
-        <div class="links-grid">
-            <a id="insta" href="#" class="link-btn" target="_blank">
-                <i class="fab fa-instagram"></i>
-                <span>انستغرام</span>
-            </a>
-            <a id="tiktok" href="#" class="link-btn" target="_blank">
-                <i class="fab fa-tiktok"></i>
-                <span>تيك توك</span>
-            </a>
-            <a id="fb" href="#" class="link-btn" target="_blank">
-                <i class="fab fa-facebook-f"></i>
-                <span>فيسبوك</span>
-            </a>
-            <a id="phone" href="#" class="link-btn">
-                <i class="fas fa-phone"></i>
-                <span>اتصال</span>
-            </a>
-        </div>
-    </div>
-
-    <div id="loading-text" style="color:white; opacity:0.5;">جاري مزامنة البيانات...</div>
-
-    <script>
-        const sheetID = '126ilAR3dYvW4NLzrorvfKTopvanRXfWufBTiqdnFn4s';
-        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
-
-        function fetchData() {
-            Papa.parse(csvUrl, {
-                download: true,
-                complete: function(results) {
-                    const data = results.data;
-                    if (data && data.length > 1) {
-                        const row = data[1]; // السطر الثاني A2, B2...
-                        
-                        document.getElementById('site-name').innerText = row[0] || "الموقع الشخصي";
-                        document.getElementById('profile-img').src = row[1] || "";
-                        document.getElementById('insta').href = row[2] || "#";
-                        document.getElementById('tiktok').href = row[3] || "#";
-                        document.getElementById('phone').href = "tel:" + row[4];
-                        if(row[5]) document.getElementById('fb').href = row[5];
-
-                        // إظهار المحتوى
-                        document.getElementById('loading-text').style.display = 'none';
-                        document.getElementById('main-content').style.display = 'block';
-                    }
-                }
-            });
-        }
-
-        window.onload = fetchData;
-    </script>
-</body>
-</html>
+<!DOCTYPE HTML>
+<html>
+   <body>
+      <h1><mark>wellcom to my web hassany </mark></h1> <hr />
+      <h2><b>what we are do in this ?</b></h2> <br />
+      
+       <p>this is <b>hassany</b> and wr com to 
+       <i>help you</i><mark>every time </mark></p> <hr />
+       
+       <h2>our img </h2> <br />
+       
+       <img src="https://l.top4top.io/p_3765e3v4q1.jpg" 
+       alt="img not work"width="400" /> <hr /> <hr />
+       <video loop="" src="https://d.top4top.io/m_3765r5bjn1.mp4" height="" 
+       width="400"  muted="" poster="https://a.top4top.io/p_3765oziel1.png" 
+       controls=""></video> <br />
+       <h1><mark><b>come again</b></mark></h1>
+       <ol type='a' start="11">
+          <li>hassany</li>
+          <li>hussien</li>
+          <li>abd al rappak</li>
+          <li>hussien</li>
+          <li><mark>html css</mark></li>
+          <li>hussien</li>
+       </ol>
+       <a href="https://top4top.io/index.php">لرفع الصير</a>
+       <h1>jjjj</h1>
