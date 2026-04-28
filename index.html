@@ -3,122 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hassany Web</title>
+    <title>Hassany Universe</title>
     <style>
-        /* تصميم الواجهة بالكامل */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+        /* إعدادات الخطوط والألوان الاحترافية */
+        :root {
+            --primary-color: #00d2ff;
+            --secondary-color: #3a7bd5;
+            --bg-dark: #0f0c29;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --text-light: #f0f0f0;
+        }
+
+        * {
             margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: var(--text-light);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* انترو رهيب عند التحميل */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* تصميم القائمة الجانبية (Sidebar) */
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            transition: 0.5s;
+            padding-top: 60px;
+            z-index: 1000;
+            border-right: 1px solid var(--primary-color);
+        }
+
+        .sidebar:hover { left: 0; }
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover { background: var(--primary-color); color: black; padding-left: 40px; }
+
+        /* حاوية المحتوى الرئيسي */
+        .main-content {
+            padding: 40px;
             text-align: center;
+            animation: fadeIn 1.5s ease-out;
         }
 
-        /* الحاوية الرئيسية للمحتوى */
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 100%;
-        }
-
+        /* تنسيق العنوان (H1) بتأثير النيون */
         h1 {
-            color: #2c3e50;
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+            margin-bottom: 20px;
         }
 
         mark {
-            background-color: #ffeb3b;
-            padding: 2px 8px;
-            border-radius: 4px;
+            background: none;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
         }
 
-        /* تنسيق الصور والفيديو */
+        /* تنسيق البطاقات (Glassmorphism) */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: 0.4s;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 32px 0 var(--primary-color);
+        }
+
+        /* تنسيق الميديا (صور وفيديو) */
         img, video {
-            border-radius: 12px;
-            margin: 15px 0;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: 0.5s;
             max-width: 100%;
-            height: auto;
-            border: 2px solid #ddd;
+        }
+
+        img:hover, video:hover {
+            filter: brightness(1.2);
+            transform: rotate(1deg);
         }
 
         /* تنسيق القائمة المرتبة */
         ol {
-            text-align: left;
+            text-align: right;
             display: inline-block;
-            background: #f9f9f9;
-            padding: 20px 40px;
-            border-radius: 10px;
-            border-left: 5px solid #27ae60;
+            background: rgba(0,0,0,0.3);
+            padding: 20px 50px;
+            border-radius: 15px;
+            line-height: 2;
         }
 
         li {
-            margin-bottom: 8px;
-            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
         }
-        <a href="22">سعدي</a>
+
+        li:hover {
+            color: var(--primary-color);
+            transform: translateX(-10px);
+        }
 
         /* تنسيق الرابط */
-        a {
+        .btn-link {
             display: inline-block;
             margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #3498db;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
             transition: 0.3s;
         }
 
-        a:hover {
-            background-color: #2980b9;
+        .btn-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.6);
         }
 
-        hr {
-            border: 0;
-            height: 1px;
-            background: #eee;
-            margin: 20px 0;
+        /* انيميشن "النبض" للعنوان الأخير */
+        .pulse {
+            animation: pulse-animation 2s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1><mark>Welcome to my web Hassany</mark></h1>
-    <hr>
-    
-    <h2 id="22">What we do here?</h2>
-    <p>This is <b>Hassany</b> and we are here to <i>help you</i> <mark>every time</mark></p>
-    <hr>
-    
-    <h2>Our Image</h2>
-    <img src="https://l.top4top.io/p_3765e3v4q1.jpg" alt="img not work" width="400">
-    <hr>
-    
-    <video loop src="https://d.top4top.io/m_3765r5bjn1.mp4" width="400" muted poster="https://a.top4top.io/p_3765oziel1.png" controls></video>
-    <br>
-    
-    <h1><mark><b>Come Again</b></mark></h1>
-    <ol type='a' start="11">
-        <li>Hassany</li>
-        <li>Hussien</li>
-        <li>Abd Al Rappak</li>
-        <li>Hussien</li>
-        <li><mark>HTML & CSS</mark></li>
-        <li>Hussien</li>
-    </ol>
-    
-    <br>
-    <a href="https://top4top.io/index.php">لرفع الصور</a>
-    
-    <h3 style="color: #ccc; margin-top: 30px;">Hassany © 2026</h3>
-</div>
+    <div class="sidebar">
+        <h3 style="text-align: center; color: var(--primary-color);">القائمة</h3>
+        <a href="#">الرئيسية</a>
+        <a href="#">فريق المتفوقين</a>
+        <a href="#">أدوات بايثون</a>
+        <a href="#">GitHub</a>
+    </div>
+
+    <div class="main-content">
+        <h1><mark>Welcome to Hassany</mark></h1>
+        
+        <div class="card">
+            <h2><b>What we do here?</b></h2>
+            <p>This is <b>Hassany</b> and we come to <i>help you</i> <mark>every time</mark></p>
+        </div>
+
+        <div class="card">
+            <h2>Our Media</h2>
+            <img src="https://l.top4top.io/p_3765e3v4q1.jpg" alt="img not work" width="400">
+            <br>
+            <video loop src="https://d.top4top.io/m_3765r5bjn1.mp4" width="400" muted poster="https://a.top4top.io/p_3765oziel1.png" controls></video>
+        </div>
+
+        <div class="card">
+            <h1 class="pulse"><mark><b>Come Again</b></mark></h1>
+            <ol type='a' start="11">
+                <li>Hassany</li>
+                <li>Hussien</li>
+                <li>Abd Al Rappak</li>
+                <li>Hussien</li>
+                <li><mark>HTML CSS Expert</mark></li>
+                <li>Hussien</li>
+            </ol>
+            <br>
+            <a href="https://top4top.io/index.php" class="btn-link">لرفع الصور والمشاريع</a>
+        </div>
+
+        <h1 style="margin-top: 50px;">مرحباً بكم مرة أخرى</h1>
+    </div>
 
 </body>
 </html>
